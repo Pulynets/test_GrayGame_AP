@@ -51,7 +51,7 @@ public class SimpleCharacterController : MonoBehaviour
         GroundedCheck();
         CalculateMoveDirection();
         CheckIfStopped();
-        FaceMoveDirection();
+        // FaceMoveDirection();
         ApplyGravity();
         Move();
         UpdateAnimator();
