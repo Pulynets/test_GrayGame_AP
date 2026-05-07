@@ -26,7 +26,7 @@ Current priority: MVP first, simple implementation, no overengineering.
 ## Unity Rules
 
 - Use C#.
-- Keep project code under Assets/Content/Scripts.
+- Keep project code under Assets/Scripts.
 - Put prefabs under Assets/Content/Prefabs.
 - Prefer MonoBehaviour for MVP gameplay systems.
 - Use ScriptableObjects only when useful for configuration, data, or reusable content.
@@ -58,31 +58,31 @@ Assets/
       Gameplay/
       UI/
       Environment/
-    Scenes/
-      Boot/
-      MainMenu/
-      Levels/
-      Tests/
-    Scripts/
-      Core/
-      Player/
-      Camera/
-      Gameplay/
-      Interaction/
-      Inventory/
-      UI/
-      Save/
-      Audio/
     ScriptableObjects/
     Data/
       Items/
       Characters/
       Levels/
       Balance/
-    Settings/
     Materials/
     Animations/
     VFX/
+  Scenes/
+    Boot/
+    MainMenu/
+    Levels/
+    Tests/
+  Scripts/
+    Core/
+    Player/
+    Camera/
+    Gameplay/
+    Interaction/
+    Inventory/
+    UI/
+    Save/
+    Audio/
+  Settings/
   External/
   Plugins/
 ```
