@@ -22,8 +22,9 @@ public class SimpleCharacterController : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed = 5f;
-    [SerializeField] private float _acceleration = 20f;
-    [SerializeField] private float _deceleration = 30f;
+    [SerializeField] private float _acceleration = 25f;
+    [SerializeField] private float _decelerationStop = 30f;
+    [SerializeField] private float _decelerationTurn = 60f;
     [SerializeField] private float _jumpForce = 10f;
     [SerializeField] private float _gravityMultiplier = 2f;
     [SerializeField] private float _rotationSpeed = 10f;
@@ -63,23 +64,59 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void CalculateMovement()
     {
+        // визначаємо напрямок руху
         _moveDirection = new Vector3(_inputReader._moveComposite.x, 0f, 0f);
+        // визначаємо чи рухаємося
         _movementInputHeld = _moveDirection.magnitude > 0.01f;
 
-        float targetSpeed = _movementInputHeld ? _moveSpeed : 0f;
-        float rateOfAcceleration = _movementInputHeld ? _acceleration : _deceleration;
-        _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, rateOfAcceleration * Time.deltaTime);
+        // кешуємо знак руху
+        float inputSign = _movementInputHeld ? Mathf.Sign(_moveDirection.x) : 0f;
+        // визначаємо чи змінюємо напрямок
+        bool isChangingDirection = _movementInputHeld
+            && _currentSpeed > 0.01f
+            && _lastMoveSign != 0f
+            && inputSign != _lastMoveSign;
 
-        if (_movementInputHeld)
+        float targetSpeed;
+        float rateOfAcceleration;
+        
+        // якщо змінюємо напрямок, то застосовуємо уповільнення для розвороту
+        if (isChangingDirection)
         {
-            _lastMoveSign = Mathf.Sign(_moveDirection.x);
+            targetSpeed = 0f;
+            rateOfAcceleration = _decelerationTurn;
+        }
+        // якщо рухаємося без зміни напрямку, то застосовуємо прискорення
+        else if (_movementInputHeld)
+        {
+            targetSpeed = _moveSpeed;
+            rateOfAcceleration = _acceleration;
+            _lastMoveSign = inputSign;
+        }
+        // якщо звершуємо рух, то застосовуємо уповільнення для зупинки
+        else
+        {
+            targetSpeed = 0f;
+            rateOfAcceleration = _decelerationStop;
         }
 
+        // основний розрахунок швидкості з урахуванням прискорення(уповільнення)
+        _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, rateOfAcceleration * Time.deltaTime);
+
+        // якщо змінюємо напрямок, то застосовуємо уповільнення для розвороту
+        if (isChangingDirection && _currentSpeed < 0.01f)
+        {
+            _lastMoveSign = inputSign;
+        }
+
+        // визначаємо швидкість руху, з урахуванням знаку напрямку
         _velocity.x = _lastMoveSign * _currentSpeed;
         _velocity.z = 0f;
 
+        // округляємо швидкість до 3 знаків після коми, для виключення похибки округлення
         _speed2D = Mathf.Round(_currentSpeed * 1000f) / 1000f;
 
+        // визначаємо тип руху (idle, walk, run)
         CalculateGait();
     }
 
