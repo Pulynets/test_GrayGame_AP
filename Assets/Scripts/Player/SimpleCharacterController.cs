@@ -22,6 +22,8 @@ public class SimpleCharacterController : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _acceleration = 20f;
+    [SerializeField] private float _deceleration = 30f;
     [SerializeField] private float _jumpForce = 10f;
     [SerializeField] private float _gravityMultiplier = 2f;
     [SerializeField] private float _rotationSpeed = 10f;
@@ -33,6 +35,8 @@ public class SimpleCharacterController : MonoBehaviour
     private Vector3 _velocity;
     private bool _isGrounded = true;
     private float _speed2D;
+    private float _currentSpeed;
+    private float _lastMoveSign;
     private Vector3 _moveDirection;
     private int _currentGait;
     private float _strafeDirectionX = 0f;
@@ -49,7 +53,7 @@ public class SimpleCharacterController : MonoBehaviour
     private void Update()
     {
         GroundedCheck();
-        CalculateMoveDirection();
+        CalculateMovement();
         CheckIfStopped();
         // FaceMoveDirection();
         ApplyGravity();
@@ -57,16 +61,24 @@ public class SimpleCharacterController : MonoBehaviour
         UpdateAnimator();
     }
 
-    private void CalculateMoveDirection()
+    private void CalculateMovement()
     {
         _moveDirection = new Vector3(_inputReader._moveComposite.x, 0f, 0f);
         _movementInputHeld = _moveDirection.magnitude > 0.01f;
 
-        _velocity.x = _moveDirection.x * _moveSpeed;
+        float targetSpeed = _movementInputHeld ? _moveSpeed : 0f;
+        float rateOfAcceleration = _movementInputHeld ? _acceleration : _deceleration;
+        _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, rateOfAcceleration * Time.deltaTime);
+
+        if (_movementInputHeld)
+        {
+            _lastMoveSign = Mathf.Sign(_moveDirection.x);
+        }
+
+        _velocity.x = _lastMoveSign * _currentSpeed;
         _velocity.z = 0f;
 
-        _speed2D = new Vector3(_velocity.x, 0f, _velocity.z).magnitude;
-        _speed2D = Mathf.Round(_speed2D * 1000f) / 1000f;
+        _speed2D = Mathf.Round(_currentSpeed * 1000f) / 1000f;
 
         CalculateGait();
     }
