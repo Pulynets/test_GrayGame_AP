@@ -16,6 +16,7 @@ public class SimpleCharacterController : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private InputReader _inputReader;
+    [SerializeField] private InputReaderExtension _inputReaderExtension;
     [SerializeField] private Animator _animator;
     [SerializeField] private CharacterController _controller;
     [SerializeField] private Transform _modelTransform;
@@ -27,6 +28,7 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private float _decelerationTurn = 60f;
     [SerializeField] private float _jumpForce = 10f;
     [SerializeField] private float _gravityMultiplier = 2f;
+    [SerializeField] private float _lowJumpMultiplier = 4f;
     [SerializeField] private float _rotationSpeed = 10f;
 
     [Header("Ground Check")]
@@ -169,11 +171,18 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void ApplyGravity()
     {
-        if (_velocity.y > Physics.gravity.y)
+        // якщо персонаж підіймається, але кнопку стрибка вже відпустили — посилена гравітація (короткий стрибок)
+        if (_velocity.y > 0f && !_inputReaderExtension.isJumpHeld)
+        {
+            _velocity.y += Physics.gravity.y * _lowJumpMultiplier * Time.deltaTime;
+        }
+        // інакше — стандартна гравітація (повний стрибок або падіння)
+        else if (_velocity.y > Physics.gravity.y)
         {
             _velocity.y += Physics.gravity.y * _gravityMultiplier * Time.deltaTime;
         }
 
+        // скидаємо анімацію стрибка коли персонаж починає падати
         if (_velocity.y <= 0f)
         {
             _animator.SetBool(_isJumpingAnimHash, false);

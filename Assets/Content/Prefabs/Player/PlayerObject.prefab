@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5711194756287330197}
   - component: {fileID: 7539610945388904804}
   - component: {fileID: 1043681655234170986}
+  - component: {fileID: 8402444459187466241}
   - component: {fileID: 8550293047975511849}
   m_Layer: 0
   m_Name: PlayerObject
@@ -48,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleCharacterController
   _inputReader: {fileID: 1043681655234170986}
-  _jumpInputTracker: {fileID: 0}
+  _inputReaderExtension: {fileID: 8402444459187466241}
   _animator: {fileID: 966910272701572607}
   _controller: {fileID: 8550293047975511849}
   _modelTransform: {fileID: 6596378249598631813}
@@ -80,6 +81,18 @@ MonoBehaviour:
   _moveComposite: {x: 0, y: 0}
   _movementInputDuration: 0
   _movementInputDetected: 0
+--- !u!114 &8402444459187466241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273211136697294794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca1c1f50f8e4d14d849ab284e59bff7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JumpInputTracker
 --- !u!143 &8550293047975511849
 CharacterController:
   m_ObjectHideFlags: 0
