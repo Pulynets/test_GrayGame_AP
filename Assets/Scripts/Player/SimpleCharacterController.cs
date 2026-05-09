@@ -37,7 +37,9 @@ public class SimpleCharacterController : MonoBehaviour
 
     [Header("Gravity")]
     [SerializeField] private float _gravityMultiplier = 2f;
+    [SerializeField] private float _fallGravityMultiplier = 3f;
     [SerializeField] private float _lowJumpMultiplier = 4f;
+    [SerializeField] private float _maxFallSpeed = 20f;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
@@ -206,10 +208,21 @@ public class SimpleCharacterController : MonoBehaviour
         {
             _velocity.y += Physics.gravity.y * _lowJumpMultiplier * Time.deltaTime;
         }
-        // інакше — стандартна гравітація (повний стрибок або падіння)
-        else if (_velocity.y > Physics.gravity.y)
+        // якщо персонаж падає — посилена гравітація для швидшого падіння
+        else if (_velocity.y < 0f)
+        {
+            _velocity.y += Physics.gravity.y * _fallGravityMultiplier * Time.deltaTime;
+        }
+        // якщо персонаж підіймається з натиснутою кнопкою — стандартна гравітація
+        else
         {
             _velocity.y += Physics.gravity.y * _gravityMultiplier * Time.deltaTime;
+        }
+
+        // обмежуємо максимальну швидкість падіння
+        if (_velocity.y < -_maxFallSpeed)
+        {
+            _velocity.y = -_maxFallSpeed;
         }
 
         // скидаємо анімацію стрибка коли персонаж починає падати
