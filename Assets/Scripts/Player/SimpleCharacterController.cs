@@ -68,7 +68,7 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void Update()
     {
-        GroundedCheck();
+        UpdateGroundState();
         CalculateMovement();
         CheckIfStopped();
         // FaceMoveDirection();
@@ -245,7 +245,7 @@ public class SimpleCharacterController : MonoBehaviour
         _controller.Move(_velocity * Time.deltaTime);
     }
 
-    private void GroundedCheck()
+    private void UpdateGroundState()
     {
         Vector3 spherePosition = new Vector3(
             _controller.transform.position.x,
