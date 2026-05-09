@@ -254,8 +254,9 @@ public class SimpleCharacterController : MonoBehaviour
         );
         _isGrounded = Physics.CheckSphere(spherePosition, _controller.radius, _groundLayerMask, QueryTriggerInteraction.Ignore);
 
-        // буфер стрибка тече кожен кадр
-        _jumpBufferCounter -= Time.deltaTime;
+        // буфер стрибка тече кожен кадр, але не нижче 0
+        if (_jumpBufferCounter > 0f)
+            _jumpBufferCounter -= Time.deltaTime;
 
         if (_isGrounded && _velocity.y <= 0f)
         {
