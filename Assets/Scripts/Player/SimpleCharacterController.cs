@@ -31,6 +31,7 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private float _gravityMultiplier = 2f;
     [SerializeField] private float _lowJumpMultiplier = 4f;
     [SerializeField] private int _maxJumps = 2;
+    [SerializeField] private float _coyoteTime = 0.12f;
     [SerializeField] private float _rotationSpeed = 10f;
 
     [Header("Ground Check")]
@@ -50,6 +51,7 @@ public class SimpleCharacterController : MonoBehaviour
     private bool _isStopped = true;
     private bool _movementInputHeld = false;
     private int _jumpsRemaining;
+    private float _coyoteTimeCounter;
 
     private void Start()
     {
@@ -214,10 +216,21 @@ public class SimpleCharacterController : MonoBehaviour
         );
         _isGrounded = Physics.CheckSphere(spherePosition, _controller.radius, _groundLayerMask, QueryTriggerInteraction.Ignore);
 
-        // скидаємо лічильник стрибків коли персонаж на землі і не підіймається
         if (_isGrounded && _velocity.y <= 0f)
         {
+            // скидаємо лічильник стрибків коли персонаж на землі і не підіймається
             _jumpsRemaining = _maxJumps;
+            // перезаряджаємо coyote таймер поки на землі
+            _coyoteTimeCounter = _coyoteTime;
+        }
+        else
+        {
+            // в повітрі — таймер тече, після закінчення перший стрибок "згорає"
+            _coyoteTimeCounter -= Time.deltaTime;
+            if (_coyoteTimeCounter <= 0f && _jumpsRemaining == _maxJumps)
+            {
+                _jumpsRemaining = _maxJumps - 1;
+            }
         }
     }
 
