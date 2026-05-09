@@ -203,18 +203,26 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void ApplyGravity()
     {
+        // якщо персонаж на землі і не підіймається — скидаємо вертикальну швидкість
+        if (_isGrounded && _velocity.y <= 0f)
+        {
+            _velocity.y = -2f;
+            _animator.SetBool(_isJumpingAnimHash, false);
+            return;
+        }
+
         // якщо персонаж підіймається, але кнопку стрибка вже відпустили — посилена гравітація (короткий стрибок)
         if (_velocity.y > 0f && !_inputReaderExtension.isJumpHeld)
         {
             _velocity.y += Physics.gravity.y * _lowJumpMultiplier * Time.deltaTime;
         }
-        // якщо персонаж падає — посилена гравітація для швидшого падіння
-        else if (_velocity.y < 0f)
+        // якщо персонаж падає і ще не досяг ліміту — посилена гравітація для швидшого падіння
+        else if (_velocity.y < 0f && _velocity.y > -_maxFallSpeed)
         {
             _velocity.y += Physics.gravity.y * _fallGravityMultiplier * Time.deltaTime;
         }
         // якщо персонаж підіймається з натиснутою кнопкою — стандартна гравітація
-        else
+        else if (_velocity.y > 0f)
         {
             _velocity.y += Physics.gravity.y * _gravityMultiplier * Time.deltaTime;
         }
