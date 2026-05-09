@@ -33,7 +33,7 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private float _jumpForceRepeated = 8f;
     [SerializeField] private int _maxJumps = 2;
     [SerializeField] private float _coyoteTime = 0.12f;
-    [SerializeField] private float _jumpBufferTime = 0.12f;
+    [SerializeField] private float _jumpBufferTime = 0.07f;
 
     [Header("Gravity")]
     [SerializeField] private float _gravityMultiplier = 2f;
@@ -252,6 +252,10 @@ public class SimpleCharacterController : MonoBehaviour
         if (_velocity.y > 0f && hit.normal.y < -0.5f)
         {
             _velocity.y = -2f;
+
+            // забираємо стрибок щоб персонаж не "зависав" під платформою при спамі
+            if (_jumpsRemaining > 0)
+                _jumpsRemaining--;
         }
     }
 
