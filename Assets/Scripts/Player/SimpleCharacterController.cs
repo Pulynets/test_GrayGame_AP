@@ -245,6 +245,16 @@ public class SimpleCharacterController : MonoBehaviour
         _controller.Move(_velocity * Time.deltaTime);
     }
 
+    // викликається автоматично коли CharacterController стикається з колайдером під час Move()
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        // якщо персонаж підіймається і вдарився головою об платформу зверху — зупиняємо підйом
+        if (_velocity.y > 0f && hit.normal.y < -0.5f)
+        {
+            _velocity.y = -2f;
+        }
+    }
+
     private void UpdateGroundState()
     {
         Vector3 spherePosition = new Vector3(
