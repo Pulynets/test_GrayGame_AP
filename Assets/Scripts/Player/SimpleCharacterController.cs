@@ -27,8 +27,10 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private float _decelerationStop = 30f;
     [SerializeField] private float _decelerationTurn = 60f;
     [SerializeField] private float _jumpForce = 10f;
+    [SerializeField] private float _jumpForceRepeated = 8f;
     [SerializeField] private float _gravityMultiplier = 2f;
     [SerializeField] private float _lowJumpMultiplier = 4f;
+    [SerializeField] private int _maxJumps = 2;
     [SerializeField] private float _rotationSpeed = 10f;
 
     [Header("Ground Check")]
@@ -47,6 +49,7 @@ public class SimpleCharacterController : MonoBehaviour
     private bool _isWalking = false;
     private bool _isStopped = true;
     private bool _movementInputHeld = false;
+    private int _jumpsRemaining;
 
     private void Start()
     {
@@ -162,11 +165,19 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void OnJump()
     {
-        if (_isGrounded)
-        {
-            _velocity.y = _jumpForce;
-            _animator.SetBool(_isJumpingAnimHash, true);
-        }
+        // якщо немає доступних стрибків — ігноруємо
+        if (_jumpsRemaining <= 0)
+            return;
+
+        // визначаємо силу стрибка: перший стрибок — повна сила, наступні — зменшена
+        float actualJumpForce = _jumpsRemaining == _maxJumps ? _jumpForce : _jumpForceRepeated;
+
+        // виконуємо стрибок
+        _velocity.y = actualJumpForce;
+        _animator.SetBool(_isJumpingAnimHash, true);
+
+        // зменшуємо лічильник доступних стрибків
+        _jumpsRemaining--;
     }
 
     private void ApplyGravity()
@@ -202,6 +213,12 @@ public class SimpleCharacterController : MonoBehaviour
             _controller.transform.position.z
         );
         _isGrounded = Physics.CheckSphere(spherePosition, _controller.radius, _groundLayerMask, QueryTriggerInteraction.Ignore);
+
+        // скидаємо лічильник стрибків коли персонаж на землі і не підіймається
+        if (_isGrounded && _velocity.y <= 0f)
+        {
+            _jumpsRemaining = _maxJumps;
+        }
     }
 
     private void UpdateAnimator()
