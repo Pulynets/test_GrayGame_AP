@@ -32,6 +32,7 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private float _lowJumpMultiplier = 4f;
     [SerializeField] private int _maxJumps = 2;
     [SerializeField] private float _coyoteTime = 0.12f;
+    [SerializeField] private float _jumpBufferTime = 0.12f;
     [SerializeField] private float _rotationSpeed = 10f;
 
     [Header("Ground Check")]
@@ -52,6 +53,7 @@ public class SimpleCharacterController : MonoBehaviour
     private bool _movementInputHeld = false;
     private int _jumpsRemaining;
     private float _coyoteTimeCounter;
+    private float _jumpBufferCounter;
 
     private void Start()
     {
@@ -167,10 +169,18 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void OnJump()
     {
-        // якщо немає доступних стрибків — ігноруємо
-        if (_jumpsRemaining <= 0)
-            return;
+        // запамʼятовуємо натискання на час _jumpBufferTime
+        _jumpBufferCounter = _jumpBufferTime;
 
+        // якщо є доступні стрибки — виконуємо одразу
+        if (_jumpsRemaining > 0)
+        {
+            ExecuteJump();
+        }
+    }
+
+    private void ExecuteJump()
+    {
         // визначаємо силу стрибка: перший стрибок — повна сила, наступні — зменшена
         float actualJumpForce = _jumpsRemaining == _maxJumps ? _jumpForce : _jumpForceRepeated;
 
@@ -180,6 +190,9 @@ public class SimpleCharacterController : MonoBehaviour
 
         // зменшуємо лічильник доступних стрибків
         _jumpsRemaining--;
+
+        // споживаємо буфер щоб стрибок не спрацював повторно
+        _jumpBufferCounter = 0f;
     }
 
     private void ApplyGravity()
@@ -216,16 +229,25 @@ public class SimpleCharacterController : MonoBehaviour
         );
         _isGrounded = Physics.CheckSphere(spherePosition, _controller.radius, _groundLayerMask, QueryTriggerInteraction.Ignore);
 
+        // буфер стрибка тече кожен кадр
+        _jumpBufferCounter -= Time.deltaTime;
+
         if (_isGrounded && _velocity.y <= 0f)
         {
             // скидаємо лічильник стрибків коли персонаж на землі і не підіймається
             _jumpsRemaining = _maxJumps;
             // перезаряджаємо coyote таймер поки на землі
             _coyoteTimeCounter = _coyoteTime;
+
+            // якщо буфер стрибка ще активний — виконуємо стрибок при приземленні
+            if (_jumpBufferCounter > 0f)
+            {
+                ExecuteJump();
+            }
         }
         else
         {
-            // в повітрі — таймер тече, після закінчення перший стрибок "згорає"
+            // в повітрі — coyote таймер тече, після закінчення перший стрибок "згорає"
             _coyoteTimeCounter -= Time.deltaTime;
             if (_coyoteTimeCounter <= 0f && _jumpsRemaining == _maxJumps)
             {
