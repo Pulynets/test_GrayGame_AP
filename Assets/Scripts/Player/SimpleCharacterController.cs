@@ -256,6 +256,13 @@ public class SimpleCharacterController : MonoBehaviour
             // забираємо стрибок щоб персонаж не "зависав" під платформою при спамі
             if (_jumpsRemaining > 0)
                 _jumpsRemaining--;
+
+            // шукаємо HittableBlock на обʼєкті або його батьках (компонент може бути на обгортці)
+            HittableBlock block = hit.collider.GetComponentInParent<HittableBlock>();
+            if (block != null)
+            {
+                block.OnHitFromBelow();
+            }
         }
     }
 
