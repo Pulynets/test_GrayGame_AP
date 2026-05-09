@@ -21,19 +21,23 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private CharacterController _controller;
     [SerializeField] private Transform _modelTransform;
 
-    [Header("Movement Settings")]
+    [Header("Movement")]
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _acceleration = 25f;
     [SerializeField] private float _decelerationStop = 30f;
     [SerializeField] private float _decelerationTurn = 60f;
+    [SerializeField] private float _rotationSpeed = 10f;
+
+    [Header("Jump")]
     [SerializeField] private float _jumpForce = 10f;
     [SerializeField] private float _jumpForceRepeated = 8f;
-    [SerializeField] private float _gravityMultiplier = 2f;
-    [SerializeField] private float _lowJumpMultiplier = 4f;
     [SerializeField] private int _maxJumps = 2;
     [SerializeField] private float _coyoteTime = 0.12f;
     [SerializeField] private float _jumpBufferTime = 0.12f;
-    [SerializeField] private float _rotationSpeed = 10f;
+
+    [Header("Gravity")]
+    [SerializeField] private float _gravityMultiplier = 2f;
+    [SerializeField] private float _lowJumpMultiplier = 4f;
 
     [Header("Ground Check")]
     [SerializeField] private LayerMask _groundLayerMask;
