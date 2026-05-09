@@ -221,8 +221,8 @@ public class SimpleCharacterController : MonoBehaviour
         {
             _velocity.y += Physics.gravity.y * _fallGravityMultiplier * Time.deltaTime;
         }
-        // якщо персонаж підіймається з натиснутою кнопкою — стандартна гравітація
-        else if (_velocity.y > 0f)
+        // інакше (підіймається з натиснутою кнопкою, або velocity.y == 0 в повітрі) — стандартна гравітація
+        else
         {
             _velocity.y += Physics.gravity.y * _gravityMultiplier * Time.deltaTime;
         }
