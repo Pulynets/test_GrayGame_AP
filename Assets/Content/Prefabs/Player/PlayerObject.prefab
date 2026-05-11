@@ -120,12 +120,12 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 1.8
-  m_Radius: 0.28
+  m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0.25
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.93, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!82 &3548100948850087828
 AudioSource:
   m_ObjectHideFlags: 0

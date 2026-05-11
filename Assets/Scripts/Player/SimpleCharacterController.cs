@@ -63,7 +63,7 @@ public class SimpleCharacterController : MonoBehaviour
     private int _jumpsRemaining;
     private float _coyoteTimeCounter;
     private float _jumpBufferCounter;
-    private bool _wasGroundedLastFrame;
+    private bool _wasGroundedLastFrame = true;
 
     private void Start()
     {
