@@ -1,4 +1,5 @@
 using UnityEngine;
+using DamageNumbersPro;
 
 public class BlockHitReaction : MonoBehaviour
 {
@@ -6,6 +7,11 @@ public class BlockHitReaction : MonoBehaviour
     [SerializeField] private bool _isBouncy = false;
     [SerializeField] private float _bounceDistance = 0.15f;
     [SerializeField] private float _bounceDuration = 0.15f;
+
+    [Header("Popup")]
+    [SerializeField] private DamageNumber _popupPrefab;
+    [SerializeField] private string _popupText = "+1";
+    [SerializeField] private float _popupTopOffset = 0.5f;
 
     [Header("Audio")]
     [SerializeField] private AudioClip _hitSound;
@@ -55,6 +61,14 @@ public class BlockHitReaction : MonoBehaviour
         {
             _bounceTimer = 0f;
             enabled = true;
+
+            // popup спавниться якщо призначений префаб
+            if (_popupPrefab != null)
+            {
+                // popup позиціююємо вище блоку на вказану величину
+                Vector3 popupPosition = transform.position + Vector3.up * _popupTopOffset;
+                _popupPrefab.Spawn(popupPosition, _popupText);
+            }
         }
     }
 }
