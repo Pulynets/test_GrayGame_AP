@@ -45,6 +45,9 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private LayerMask _groundLayerMask;
     [SerializeField] private float _groundedOffset = -0.14f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource _landingAudioSource;
+
     private Vector3 _velocity;
     private bool _isGrounded = true;
     private float _speed2D;
@@ -60,6 +63,7 @@ public class SimpleCharacterController : MonoBehaviour
     private int _jumpsRemaining;
     private float _coyoteTimeCounter;
     private float _jumpBufferCounter;
+    private bool _wasGroundedLastFrame;
 
     private void Start()
     {
@@ -281,6 +285,12 @@ public class SimpleCharacterController : MonoBehaviour
 
         if (_isGrounded && _velocity.y <= 0f)
         {
+            // звук приземлення — тільки в момент переходу з повітря на землю
+            if (!_wasGroundedLastFrame && _landingAudioSource != null)
+            {
+                _landingAudioSource.Play();
+            }
+
             // скидаємо лічильник стрибків коли персонаж на землі і не підіймається
             _jumpsRemaining = _maxJumps;
             // перезаряджаємо coyote таймер поки на землі
@@ -301,6 +311,8 @@ public class SimpleCharacterController : MonoBehaviour
                 _jumpsRemaining = _maxJumps - 1;
             }
         }
+
+        _wasGroundedLastFrame = _isGrounded;
     }
 
     private void UpdateAnimator()
