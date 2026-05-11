@@ -2554,7 +2554,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1274109616688582508, guid: 4ce1944982d8a2d4083989ded0ee2084, type: 3}
       propertyPath: m_Name
-      value: SpecialCube
+      value: SpecialBlock
       objectReference: {fileID: 0}
     - target: {fileID: 4367209052349024623, guid: 4ce1944982d8a2d4083989ded0ee2084, type: 3}
       propertyPath: m_LocalPosition.x

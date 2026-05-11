@@ -257,8 +257,8 @@ public class SimpleCharacterController : MonoBehaviour
             if (_jumpsRemaining > 0)
                 _jumpsRemaining--;
 
-            // шукаємо HittableBlock на обʼєкті або його батьках (компонент може бути на обгортці)
-            HittableBlock block = hit.collider.GetComponentInParent<HittableBlock>();
+            // реакція на удар по обʼєкту (компонент на контейнері блоків)
+            BlockHitReaction block = hit.collider.GetComponentInParent<BlockHitReaction>();
             if (block != null)
             {
                 block.OnHitFromBelow();
