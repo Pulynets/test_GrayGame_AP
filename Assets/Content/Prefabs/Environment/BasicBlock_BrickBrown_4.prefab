@@ -48,7 +48,12 @@ MonoBehaviour:
   _isBouncy: 0
   _bounceDistance: 0.15
   _bounceDuration: 0.15
-  _hitSound: {fileID: 0}
+  _popupPrefab: {fileID: 0}
+  _popupText: +1
+  _popupTopOffset: 0.5
+  _popupNumber: 0
+  _hitSound: {fileID: 8300000, guid: b63dd8283ade2134ab34886f8cb5d2d7, type: 3}
+  _popupSound: {fileID: 0}
 --- !u!1001 &9113672223729578166
 PrefabInstance:
   m_ObjectHideFlags: 0

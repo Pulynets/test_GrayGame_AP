@@ -15,7 +15,8 @@ public class BlockHitReaction : MonoBehaviour
     [SerializeField] private int _popupNumber;
 
     [Header("Audio")]
-    [SerializeField] private AudioClip _hitSound;
+    [SerializeField] private AudioClip _hitSound;    
+    [SerializeField] private AudioClip _popupSound;
 
     private Vector3 _originalPosition;
     private float _bounceTimer;
@@ -71,6 +72,12 @@ public class BlockHitReaction : MonoBehaviour
                 // popup позиціююємо вище блоку на вказану величину
                 Vector3 popupPosition = transform.position + Vector3.up * _popupTopOffset;
                 _popupPrefab.Spawn(popupPosition, _popupText);
+
+                // звук popup відтворюється, якщо призначений
+                if (_popupSound != null)
+                {
+                    AudioSource.PlayClipAtPoint(_popupSound, transform.position);
+                }
 
                 // зменшуємо лічильник тільки в обмеженому режимі
                 if (_popupNumber > 0)
