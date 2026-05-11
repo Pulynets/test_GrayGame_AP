@@ -46,8 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BlockHitReaction
   _isBouncy: 1
-  _bounceDistance: 0.15
-  _bounceDuration: 0.15
+  _bounceDistance: 0.45
+  _bounceDuration: 0.22
   _hitSound: {fileID: 0}
 --- !u!1001 &5808257068682220659
 PrefabInstance:
