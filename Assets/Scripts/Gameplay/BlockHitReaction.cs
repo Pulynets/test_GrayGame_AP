@@ -12,16 +12,19 @@ public class BlockHitReaction : MonoBehaviour
     [SerializeField] private DamageNumber _popupPrefab;
     [SerializeField] private string _popupText = "+1";
     [SerializeField] private float _popupTopOffset = 0.5f;
+    [SerializeField] private int _popupNumber;
 
     [Header("Audio")]
     [SerializeField] private AudioClip _hitSound;
 
     private Vector3 _originalPosition;
     private float _bounceTimer;
+    private int _popupRemaining;
 
     private void Start()
     {
         _originalPosition = transform.localPosition;
+        _popupRemaining = _popupNumber;
         // вимикаємо Update одразу після створення
         enabled = false;
     }
@@ -62,12 +65,18 @@ public class BlockHitReaction : MonoBehaviour
             _bounceTimer = 0f;
             enabled = true;
 
-            // popup спавниться якщо призначений префаб
-            if (_popupPrefab != null)
+            // popup спавниться якщо призначений префаб і є доступні спавни (або нескінченний режим)
+            if (_popupPrefab != null && (_popupRemaining > 0 || _popupNumber <= 0))
             {
                 // popup позиціююємо вище блоку на вказану величину
                 Vector3 popupPosition = transform.position + Vector3.up * _popupTopOffset;
                 _popupPrefab.Spawn(popupPosition, _popupText);
+
+                // зменшуємо лічильник тільки в обмеженому режимі
+                if (_popupNumber > 0)
+                {
+                    _popupRemaining--;
+                }
             }
         }
     }

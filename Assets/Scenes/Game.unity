@@ -2657,6 +2657,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpecialBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 1366075351508937944, guid: 4ce1944982d8a2d4083989ded0ee2084, type: 3}
+      propertyPath: _popupNumber
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4367209052349024623, guid: 4ce1944982d8a2d4083989ded0ee2084, type: 3}
       propertyPath: m_LocalPosition.x
       value: 13
