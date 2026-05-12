@@ -649,9 +649,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleCharacterCameraFollow
   _target: {fileID: 1594576062}
+  _facingSource: {fileID: 1792329294}
   _offset: {x: 0, y: 2.65, z: -9.5}
   _lookAtOffset: {x: 0, y: 2.53, z: 0}
   _smoothSpeed: 5
+  _lookAheadDistance: 4
+  _lookAheadSmoothSpeed: 0.55
 --- !u!1001 &378194195
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2225,6 +2228,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6805968687076723857, guid: 2f0acb7169afb044a9b67d72f418b5ff, type: 3}
   m_PrefabInstance: {fileID: 1788579982}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1792329294 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6596378249598631813, guid: 29cb44a4c4e30b5468b5bb6319c5fb52, type: 3}
+  m_PrefabInstance: {fileID: 2874367721967198683}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1801478059 stripped
 Transform:
