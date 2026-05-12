@@ -329,11 +329,12 @@ public class SimpleCharacterController : MonoBehaviour
             if (_jumpsRemaining > 0)
                 _jumpsRemaining--;
 
-            // реакція на удар по обʼєкту (компонент на контейнері блоків)
+            // реакція на удар по обʼєкту (компонент на контейнері блоків).
+            // передаємо реальну точку контакту, щоб іскри спавнились саме там, де голова торкнулась блоку
             BlockHitReaction block = hit.collider.GetComponentInParent<BlockHitReaction>();
             if (block != null)
             {
-                block.OnHitFromBelow();
+                block.OnHitFromBelow(hit.point);
             }
         }
     }

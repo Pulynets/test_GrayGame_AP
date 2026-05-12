@@ -18,6 +18,9 @@ public class BlockHitReaction : MonoBehaviour
     [SerializeField] private AudioClip _hitSound;    
     [SerializeField] private AudioClip _popupSound;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject _hitSparksPrefab;
+
     private Vector3 _originalPosition;
     private float _bounceTimer;
     private int _popupRemaining;
@@ -48,7 +51,7 @@ public class BlockHitReaction : MonoBehaviour
         transform.localPosition = _originalPosition + Vector3.up * offset;
     }
 
-    public void OnHitFromBelow()
+    public void OnHitFromBelow(Vector3 hitPoint)
     {
         // ігноруємо повторні удари поки анімація в процесі
         if (enabled)
@@ -65,6 +68,12 @@ public class BlockHitReaction : MonoBehaviour
         {
             _bounceTimer = 0f;
             enabled = true;
+
+            // іскри в точці контакту персонажа з блоком (метал об метал)
+            if (_hitSparksPrefab != null)
+            {
+                Instantiate(_hitSparksPrefab, hitPoint, Quaternion.identity);
+            }
 
             // popup спавниться якщо призначений префаб і є доступні спавни (або нескінченний режим)
             if (_popupPrefab != null && (_popupRemaining > 0 || _popupNumber <= 0))

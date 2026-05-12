@@ -54,6 +54,7 @@ MonoBehaviour:
   _popupNumber: 0
   _hitSound: {fileID: 8300000, guid: b69c27daf3d5cd04daa6d806ee88520d, type: 3}
   _popupSound: {fileID: 8300000, guid: f7177ed493e09f443b2d6708e89f0c07, type: 3}
+  _hitSparksPrefab: {fileID: 2210791713700551890, guid: 249fb2b30732d2d45b3e556515cb0bab, type: 3}
 --- !u!1001 &5808257068682220659
 PrefabInstance:
   m_ObjectHideFlags: 0
