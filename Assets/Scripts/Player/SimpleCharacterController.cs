@@ -55,6 +55,11 @@ public class SimpleCharacterController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource _landingAudioSource;
 
+    [Header("VFX")]
+    [SerializeField] private GameObject _landingDustPrefab;
+    [SerializeField] private Transform _vfxFeetPoint;
+    [SerializeField] private float _landingDustMinFallSpeed = 4f;
+
     private Vector3 _velocity;
     private bool _isGrounded = true;
     private float _speed2D;
@@ -348,10 +353,10 @@ public class SimpleCharacterController : MonoBehaviour
 
         if (_isGrounded && _velocity.y <= 0f)
         {
-            // звук приземлення — тільки в момент переходу з повітря на землю
-            if (!_wasGroundedLastFrame && _landingAudioSource != null)
+            // приземлення — тільки в момент переходу з повітря на землю
+            if (!_wasGroundedLastFrame)
             {
-                _landingAudioSource.Play();
+                OnLanded();
             }
 
             // скидаємо лічильник стрибків коли персонаж на землі і не підіймається
@@ -376,6 +381,22 @@ public class SimpleCharacterController : MonoBehaviour
         }
 
         _wasGroundedLastFrame = _isGrounded;
+    }
+
+    private void OnLanded()
+    {
+        // звук приземлення
+        if (_landingAudioSource != null)
+        {
+            _landingAudioSource.Play();
+        }
+
+        // пил приземлення — тільки якщо швидкість падіння перевищує поріг
+        if (_landingDustPrefab != null && Mathf.Abs(_velocity.y) >= _landingDustMinFallSpeed)
+        {
+            Vector3 spawnPos = _vfxFeetPoint != null ? _vfxFeetPoint.position : transform.position;
+            Instantiate(_landingDustPrefab, spawnPos, Quaternion.identity);
+        }
     }
 
     private void UpdateAnimator()
