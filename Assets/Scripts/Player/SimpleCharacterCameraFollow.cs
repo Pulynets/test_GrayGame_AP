@@ -7,6 +7,7 @@ public class SimpleCharacterCameraFollow : MonoBehaviour
 
     [Header("Camera Settings")]
     [SerializeField] private Vector3 _offset = new Vector3(0f, 5f, -10f);
+    [SerializeField] private Vector3 _lookAtOffset = new Vector3(0f, 3f, 0f);
     [SerializeField] private float _smoothSpeed = 5f;
     
 
@@ -19,6 +20,6 @@ public class SimpleCharacterCameraFollow : MonoBehaviour
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, targetPosition, _smoothSpeed * Time.deltaTime);
         transform.position = smoothedPosition;
 
-        transform.LookAt(_target);
+        transform.LookAt(_target.position + _lookAtOffset);
     }
 }
