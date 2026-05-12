@@ -54,9 +54,11 @@ public class SimpleCharacterController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioSource _landingAudioSource;
+    [SerializeField] private AudioSource _pivotAudioSource;
 
     [Header("VFX")]
     [SerializeField] private GameObject _landingDustPrefab;
+    [SerializeField] private GameObject _pivotDustPrefab;
     [SerializeField] private Transform _vfxFeetPoint;
     [SerializeField] private float _landingDustMinFallSpeed = 4f;
 
@@ -152,6 +154,7 @@ public class SimpleCharacterController : MonoBehaviour
                 _currentSpeed *= _pivotSpeedRetention;
                 targetSpeed = _moveSpeed;
                 rateOfAcceleration = _acceleration;
+                OnSprintPivot();
             }
             else
             {
@@ -397,6 +400,22 @@ public class SimpleCharacterController : MonoBehaviour
         {
             Vector3 spawnPos = _vfxFeetPoint != null ? _vfxFeetPoint.position : transform.position;
             Instantiate(_landingDustPrefab, spawnPos, Quaternion.identity);
+        }
+    }
+
+    private void OnSprintPivot()
+    {
+        // звук при розвороті
+        if (_pivotAudioSource != null)
+        {
+            _pivotAudioSource.Play();
+        }
+
+        // пил з-під ніг при розвороті
+        if (_pivotDustPrefab != null)
+        {
+            Vector3 spawnPos = _vfxFeetPoint != null ? _vfxFeetPoint.position : transform.position;
+            Instantiate(_pivotDustPrefab, spawnPos, Quaternion.identity);
         }
     }
 
