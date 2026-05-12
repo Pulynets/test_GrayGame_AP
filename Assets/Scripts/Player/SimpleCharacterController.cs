@@ -29,6 +29,12 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private float _decelerationTurn = 60f;
     [SerializeField] private float _rotationSpeed = 10f;
 
+    [Header("Sharp Turn (Sprint Pivot)")]
+    [Tooltip("Частка швидкості, що зберігається при різкому розвороті під час спринту.")]
+    [SerializeField, Range(0f, 1f)] private float _pivotSpeedRetention = 0.7f;
+    [Tooltip("Тривалість gap між клавішами).")]
+    [SerializeField, Range(0f, 0.3f)] private float _inputBufferDuration = 0.1f;
+
     [Header("Jump")]
     [SerializeField] private float _jumpForce = 10f;
     [SerializeField] private float _jumpForceRepeated = 8f;
@@ -62,6 +68,8 @@ public class SimpleCharacterController : MonoBehaviour
     private bool _isStopped = true;
     private bool _movementInputHeld = false;
     private bool _isSprinting = false;
+    private float _bufferedInputSign;
+    private float _inputBufferTimer;
     private int _jumpsRemaining;
     private float _coyoteTimeCounter;
     private float _jumpBufferCounter;
@@ -87,10 +95,30 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void CalculateMovement()
     {
-        // визначаємо напрямок руху
-        _moveDirection = new Vector3(_inputReader._moveComposite.x, 0f, 0f);
-        // визначаємо чи рухаємося
-        _movementInputHeld = _moveDirection.magnitude > 0.01f;
+        // зчитуємо сирий input з 2D Composite. На клавіатурі він провалюється в 0
+        // якщо одночасно тримати A+D, або при коротких gap-ах між release/press —
+        // тому застосовуємо короткий буфер, щоб не починати гальмування на 1-2 кадри
+        float rawX = _inputReader._moveComposite.x;
+        if (Mathf.Abs(rawX) > 0.01f)
+        {
+            _bufferedInputSign = Mathf.Sign(rawX);
+            _inputBufferTimer = 0f;
+            _moveDirection = new Vector3(rawX, 0f, 0f);
+            _movementInputHeld = true;
+        }
+        else if (_bufferedInputSign != 0f && _inputBufferTimer < _inputBufferDuration)
+        {
+            // тримаємо попередній знак, щоб переграти провисання композита
+            _inputBufferTimer += Time.deltaTime;
+            _moveDirection = new Vector3(_bufferedInputSign, 0f, 0f);
+            _movementInputHeld = true;
+        }
+        else
+        {
+            _bufferedInputSign = 0f;
+            _moveDirection = Vector3.zero;
+            _movementInputHeld = false;
+        }
 
         // кешуємо знак руху
         float inputSign = _movementInputHeld ? Mathf.Sign(_moveDirection.x) : 0f;
@@ -103,11 +131,24 @@ public class SimpleCharacterController : MonoBehaviour
         float targetSpeed;
         float rateOfAcceleration;
         
-        // якщо змінюємо напрямок, то застосовуємо уповільнення для розвороту
+        // якщо змінюємо напрямок:
+        //  - під час бігу (спринту): різкий розворот — миттєво міняємо знак і
+        //    зберігаємо зберігаємо частину швидкості, далі стандартний розгін
+        //  - інакше (walk): гальмуємо до нуля, з уповільненням і зворотнім прискоренням
         if (isChangingDirection)
         {
-            targetSpeed = 0f;
-            rateOfAcceleration = _decelerationTurn;
+            if (_isSprinting && _isGrounded)
+            {
+                _lastMoveSign = inputSign;
+                _currentSpeed *= _pivotSpeedRetention;
+                targetSpeed = _moveSpeed;
+                rateOfAcceleration = _acceleration;
+            }
+            else
+            {
+                targetSpeed = 0f;
+                rateOfAcceleration = _decelerationTurn;
+            }
         }
         // якщо рухаємося без зміни напрямку, то застосовуємо прискорення
         else if (_movementInputHeld)

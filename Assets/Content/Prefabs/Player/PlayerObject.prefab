@@ -60,6 +60,8 @@ MonoBehaviour:
   _decelerationStop: 30
   _decelerationTurn: 60
   _rotationSpeed: 10
+  _pivotSpeedRetention: 0.7
+  _inputBufferDuration: 0.12
   _jumpForce: 11.7
   _jumpForceRepeated: 6.03
   _maxJumps: 2
