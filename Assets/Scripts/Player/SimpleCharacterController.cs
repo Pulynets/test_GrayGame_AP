@@ -32,7 +32,7 @@ public class SimpleCharacterController : MonoBehaviour
     [Header("Sharp Turn (Sprint Pivot)")]
     [Tooltip("Частка швидкості, що зберігається при різкому розвороті під час спринту.")]
     [SerializeField, Range(0f, 1f)] private float _pivotSpeedRetention = 0.7f;
-    [Tooltip("Тривалість gap між клавішами).")]
+    [Tooltip("Тривалість gap між клавішами.")]
     [SerializeField, Range(0f, 0.3f)] private float _inputBufferDuration = 0.1f;
 
     [Header("Jump")]
@@ -62,8 +62,6 @@ public class SimpleCharacterController : MonoBehaviour
     private float _lastMoveSign;
     private Vector3 _moveDirection;
     private int _currentGait;
-    private float _strafeDirectionX = 0f;
-    private float _strafeDirectionZ = 1f;
     private bool _isWalking = false;
     private bool _isStopped = true;
     private bool _movementInputHeld = false;
@@ -80,6 +78,12 @@ public class SimpleCharacterController : MonoBehaviour
         _inputReader.onJumpPerformed += OnJump;
         _inputReader.onSprintActivated += OnSprintActivated;
         _inputReader.onSprintDeactivated += OnSprintDeactivated;
+
+        // strafe-параметри для 2D-платформера константні: завжди дивимось "вперед"
+        // і не strafe'ємо — виставляємо їх один раз, щоб не слати щокадру
+        _animator.SetFloat(_strafeDirectionXHash, 0f);
+        _animator.SetFloat(_strafeDirectionZHash, 1f);
+        _animator.SetFloat(_isStrafingHash, 0f);
     }
 
     private void Update()
@@ -168,7 +172,8 @@ public class SimpleCharacterController : MonoBehaviour
         // основний розрахунок швидкості з урахуванням прискорення(уповільнення)
         _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, rateOfAcceleration * Time.deltaTime);
 
-        // якщо змінюємо напрямок, то застосовуємо уповільнення для розвороту
+        // walk/air pivot: коли швидкість гальмуванням дійшла до 0 — перемикаємо знак,
+        // щоб персонаж розігнався у новий бік. (для sprint-pivot знак уже виставлено вище)
         if (isChangingDirection && _currentSpeed < 0.01f)
         {
             _lastMoveSign = inputSign;
@@ -378,9 +383,6 @@ public class SimpleCharacterController : MonoBehaviour
         _animator.SetFloat(_moveSpeedHash, _speed2D);
         _animator.SetInteger(_currentGaitHash, _currentGait);
         _animator.SetBool(_isGroundedHash, _isGrounded);
-        _animator.SetFloat(_strafeDirectionXHash, _strafeDirectionX);
-        _animator.SetFloat(_strafeDirectionZHash, _strafeDirectionZ);
-        _animator.SetFloat(_isStrafingHash, 0f);
         _animator.SetBool(_isWalkingHash, _isWalking);
         _animator.SetBool(_isStoppedHash, _isStopped);
         _animator.SetBool(_movementInputHeldHash, _movementInputHeld);
