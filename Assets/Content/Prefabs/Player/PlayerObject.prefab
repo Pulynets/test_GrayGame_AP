@@ -54,13 +54,14 @@ MonoBehaviour:
   _animator: {fileID: 966910272701572607}
   _controller: {fileID: 8550293047975511849}
   _modelTransform: {fileID: 6596378249598631813}
-  _moveSpeed: 5
+  _walkSpeed: 5
+  _moveSpeed: 10
   _acceleration: 25
   _decelerationStop: 30
   _decelerationTurn: 60
   _rotationSpeed: 10
-  _jumpForce: 10
-  _jumpForceRepeated: 8
+  _jumpForce: 11.7
+  _jumpForceRepeated: 6.03
   _maxJumps: 2
   _coyoteTime: 0.12
   _jumpBufferTime: 0.07
