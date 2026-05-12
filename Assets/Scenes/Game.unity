@@ -658,7 +658,7 @@ MonoBehaviour:
   _minX: 0
   _maxX: 17
   _minY: 3.36
-  _maxY: 8.2
+  _maxY: 9
 --- !u!1001 &378194195
 PrefabInstance:
   m_ObjectHideFlags: 0
