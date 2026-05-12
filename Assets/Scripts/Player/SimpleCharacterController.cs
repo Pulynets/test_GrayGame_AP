@@ -22,6 +22,7 @@ public class SimpleCharacterController : MonoBehaviour
     [SerializeField] private Transform _modelTransform;
 
     [Header("Movement")]
+    [SerializeField] private float _walkSpeed = 2.5f;
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _acceleration = 25f;
     [SerializeField] private float _decelerationStop = 30f;
@@ -60,6 +61,7 @@ public class SimpleCharacterController : MonoBehaviour
     private bool _isWalking = false;
     private bool _isStopped = true;
     private bool _movementInputHeld = false;
+    private bool _isSprinting = false;
     private int _jumpsRemaining;
     private float _coyoteTimeCounter;
     private float _jumpBufferCounter;
@@ -68,6 +70,8 @@ public class SimpleCharacterController : MonoBehaviour
     private void Start()
     {
         _inputReader.onJumpPerformed += OnJump;
+        _inputReader.onSprintActivated += OnSprintActivated;
+        _inputReader.onSprintDeactivated += OnSprintDeactivated;
     }
 
     private void Update()
@@ -108,7 +112,8 @@ public class SimpleCharacterController : MonoBehaviour
         // якщо рухаємося без зміни напрямку, то застосовуємо прискорення
         else if (_movementInputHeld)
         {
-            targetSpeed = _moveSpeed;
+            // hold-Shift перемикає цільову швидкість між walk і run
+            targetSpeed = _isSprinting ? _moveSpeed : _walkSpeed;
             rateOfAcceleration = _acceleration;
             _lastMoveSign = inputSign;
         }
@@ -141,17 +146,19 @@ public class SimpleCharacterController : MonoBehaviour
 
     private void CalculateGait()
     {
+        // gait визначаємо за наміром (input + sprint), а не за миттєвою швидкістю —
+        // інакше при розгоні до run-швидкості Animator проскакує walk-проміжок
         if (_speed2D < 0.01f)
         {
             _currentGait = 0; // Idle
         }
-        else if (_speed2D < _moveSpeed * 0.5f)
+        else if (_movementInputHeld && _isSprinting)
         {
-            _currentGait = 1; // Walk
+            _currentGait = 2; // Run
         }
         else
         {
-            _currentGait = 2; // Run
+            _currentGait = 1; // Walk
         }
     }
 
@@ -175,6 +182,16 @@ public class SimpleCharacterController : MonoBehaviour
                 _modelTransform.rotation = Quaternion.Slerp(_modelTransform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
             }
         }
+    }
+
+    private void OnSprintActivated()
+    {
+        _isSprinting = true;
+    }
+
+    private void OnSprintDeactivated()
+    {
+        _isSprinting = false;
     }
 
     private void OnJump()
@@ -331,5 +348,7 @@ public class SimpleCharacterController : MonoBehaviour
     private void OnDestroy()
     {
         _inputReader.onJumpPerformed -= OnJump;
+        _inputReader.onSprintActivated -= OnSprintActivated;
+        _inputReader.onSprintDeactivated -= OnSprintDeactivated;
     }
 }
