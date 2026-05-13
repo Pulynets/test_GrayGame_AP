@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7122993297792690594}
   - component: {fileID: 3185249966295470384}
+  - component: {fileID: 235738507035664026}
   m_Layer: 0
   m_Name: Background_Back
   m_TagString: Untagged
@@ -91,3 +92,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &235738507035664026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7472297702250543355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01e6a2a9eefa35f418914ea41ed3b988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParallaxBackground
+  _camera: {fileID: 0}
+  _parallaxFactorX: 1
+  _parallaxFactorY: 0
