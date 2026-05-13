@@ -14,6 +14,10 @@ public class BlockHitReaction : MonoBehaviour
     [SerializeField] private float _popupTopOffset = 0.5f;
     [SerializeField] private int _popupNumber;
 
+    [Header("Bonus")]
+    [SerializeField] private GameObject _bonusPrefab;
+    [SerializeField] private Vector3 _bonusOffset = new Vector3(0f, 0.5f, 0f);
+
     [Header("Audio")]
     [SerializeField] private AudioClip _hitSound;    
     [SerializeField] private AudioClip _popupSound;
@@ -24,6 +28,7 @@ public class BlockHitReaction : MonoBehaviour
     private Vector3 _originalPosition;
     private float _bounceTimer;
     private int _popupRemaining;
+    private bool _bonusSpawned;
 
     private void Start()
     {
@@ -93,6 +98,14 @@ public class BlockHitReaction : MonoBehaviour
                 {
                     _popupRemaining--;
                 }
+            }
+
+            // спавн одного бонусу
+            if (_bonusPrefab != null && !_bonusSpawned)
+            {
+                Vector3 bonusPosition = transform.position + _bonusOffset;
+                Instantiate(_bonusPrefab, bonusPosition, Quaternion.identity);
+                _bonusSpawned = true;
             }
         }
     }

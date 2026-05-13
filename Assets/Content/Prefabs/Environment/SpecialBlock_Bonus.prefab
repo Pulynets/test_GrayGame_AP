@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4367209052349024623}
   - component: {fileID: 1366075351508937944}
   m_Layer: 0
-  m_Name: SpecialBlock
+  m_Name: SpecialBlock_Bonus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,13 +48,15 @@ MonoBehaviour:
   _isBouncy: 1
   _bounceDistance: 0.45
   _bounceDuration: 0.22
-  _popupPrefab: {fileID: 5445448510257546009, guid: 80652c62980d1434685b7c1c90c71d34, type: 3}
+  _popupPrefab: {fileID: 0}
   _popupText: +1
   _popupTopOffset: 0.77
   _popupNumber: 0
   _hitSound: {fileID: 8300000, guid: b69c27daf3d5cd04daa6d806ee88520d, type: 3}
   _popupSound: {fileID: 8300000, guid: f7177ed493e09f443b2d6708e89f0c07, type: 3}
   _hitSparksPrefab: {fileID: 2210791713700551890, guid: 249fb2b30732d2d45b3e556515cb0bab, type: 3}
+  _bonusPrefab: {fileID: 3201972930249009693, guid: 6fcbc9fedf6e7544d911c6c4b6e288ff, type: 3}
+  _bonusOffset: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &5808257068682220659
 PrefabInstance:
   m_ObjectHideFlags: 0
