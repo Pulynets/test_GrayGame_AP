@@ -10,10 +10,19 @@ public class BonusBehavior : MonoBehaviour
     [Header("Trajectory")]
     [SerializeField] private float _riseHeight = 1.5f;
     [SerializeField] private float _fallBack = 1f;
-
-    [Header("Easing")]
     [SerializeField] private Ease _riseEase = Ease.OutQuad;
     [SerializeField] private Ease _fallEase = Ease.InQuad;
+
+    [Header("Rotation")]
+    [SerializeField] private Vector3 _rotation = new Vector3(0f, 360f, 0f);
+    [SerializeField] private Ease _rotationEase = Ease.Linear;
+
+    [Header("Scale")]
+    [SerializeField] private float _scaleStart = 0f;
+    [SerializeField] private float _scaleMAX = 1f;
+    [SerializeField] private float _scaleEnd = 0f;
+    [SerializeField] private Ease _riseScaleEase = Ease.OutQuad;
+    [SerializeField] private Ease _fallScaleEase = Ease.InQuad;
 
     [Header("Effects")]
     [SerializeField] private GameObject _prefabVFX;
@@ -45,9 +54,19 @@ public class BonusBehavior : MonoBehaviour
     {
         float startY = transform.position.y;
 
+        // задаємо початковий scale одразу
+        transform.localScale = Vector3.one * _scaleStart;
+
         Sequence seq = DOTween.Sequence();
+        // фаза підйому: позиція + scale паралельно
         seq.Append(transform.DOMoveY(startY + _riseHeight, _riseDuration).SetEase(_riseEase));
+        seq.Join(transform.DOScale(_scaleMAX, _riseDuration).SetEase(_riseScaleEase));
+        // фаза падіння: позиція + scale паралельно
         seq.Append(transform.DOMoveY(startY + _riseHeight - _fallBack, _fallDuration).SetEase(_fallEase));
+        seq.Join(transform.DOScale(_scaleEnd, _fallDuration).SetEase(_fallScaleEase));
+        // обертання — паралельно з усією анімацією (вставка в момент 0 на тривалість rise+fall)
+        seq.Insert(0f, transform.DORotate(_rotation, _riseDuration + _fallDuration, RotateMode.LocalAxisAdd).SetEase(_rotationEase));
+
         seq.OnComplete(() => Destroy(gameObject));
         // прив'язуємо Sequence до gameObject: при знищенні об'єкту (наприклад, через рестарт сцени)
         // DOTween автоматично вбиває Sequence ДО того, як вона викличе callback на null target/MonoBehaviour

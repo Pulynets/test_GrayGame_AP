@@ -46,22 +46,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87f594d33d119a9498259d77f2a740d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BonusBehavior
-  _riseHeight: 1
-  _fallBack: 0.8
-  _totalDuration: 1.8
-  _riseTimeRatio: 0.3
-  _rotation: {x: 0, y: 900, z: 0}
-  _initialScaleDuration: 0.3
-  _peakScale: 1.5
-  _riseEase: 6
-  _fallEase: 5
-  _initialScaleEase: 27
-  _scaleToPeakEase: 4
-  _scaleToZeroEase: 8
+  _riseDuration: 0.45
+  _fallDuration: 0.8
+  _riseHeight: 1.2
+  _fallBack: 1.5
+  _riseEase: 15
+  _fallEase: 14
+  _rotation: {x: 30, y: 900, z: 0}
+  _rotationEase: 1
+  _scaleStart: 0.5
+  _scaleMAX: 1.5
+  _scaleEnd: 0.1
+  _riseScaleEase: 6
+  _fallScaleEase: 17
   _prefabVFX: {fileID: 2198216559110882163, guid: 383605abc8d78404c817359909329c89, type: 3}
-  _delayVFX: 0.6
+  _delayVFX: 0.3
   _audioSource: {fileID: 7932219748519380074}
-  _delaySFX: 0.1
+  _delaySFX: 0.25
 --- !u!82 &7932219748519380074
 AudioSource:
   m_ObjectHideFlags: 0
