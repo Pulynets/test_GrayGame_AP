@@ -49,6 +49,9 @@ public class BonusBehavior : MonoBehaviour
         seq.Append(transform.DOMoveY(startY + _riseHeight, _riseDuration).SetEase(_riseEase));
         seq.Append(transform.DOMoveY(startY + _riseHeight - _fallBack, _fallDuration).SetEase(_fallEase));
         seq.OnComplete(() => Destroy(gameObject));
+        // прив'язуємо Sequence до gameObject: при знищенні об'єкту (наприклад, через рестарт сцени)
+        // DOTween автоматично вбиває Sequence ДО того, як вона викличе callback на null target/MonoBehaviour
+        seq.SetLink(gameObject);
     }
 
     private void PlaySfx()
